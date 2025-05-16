@@ -3,14 +3,10 @@
 import arcade
 
 # Constants
-WINDOW_WIDTH = 1920
-WINDOW_HEIGHT = 1080
-WINDOW_TITLE = "PLACEHOLDER"
-PLAYER_MOVEMENT_SPEED = 30
-GRAVITY = -1
+from constants import *
 
 
-class GameView(arcade.Window):
+class MainGame(arcade.Window):
     """
     Main application class.
     """
@@ -19,13 +15,12 @@ class GameView(arcade.Window):
 
         # Call the parent class to set up the window
         super().__init__(WINDOW_WIDTH, WINDOW_HEIGHT, WINDOW_TITLE, fullscreen=True)
-        self.main_movement_texture = arcade.load_texture("assets/KaydenGameBarBeerAnimation.gif")
+        self.main_movement_texture = arcade.load_texture("assets/KaydenGameBarDarrienAsCustomer.png")
         self.main_movement_sprite = arcade.Sprite(self.main_movement_texture)
         self.main_movement_sprite.center_x = WINDOW_WIDTH/2
         self.main_movement_sprite.center_y = WINDOW_HEIGHT/2
 
-        self.physics_engine = arcade.PhysicsEngineSimple(
-            self.main_movement_sprite)
+        self.physics_engine = arcade.PhysicsEngineSimple(self.main_movement_sprite)
         self.background_color = arcade.csscolor.CORNFLOWER_BLUE
 
     def setup(self):
@@ -47,36 +42,23 @@ class GameView(arcade.Window):
 
     def on_update(self, delta_time):
         self.physics_engine.update()
-        self.main_movement_sprite.change_y = GRAVITY
+        self.main_movement_sprite.center_y += GRAVITY
 
-    def on_key_hold(self, key, modifiers):
-        """Called whenever a key is pressed."""
-
-        if key == arcade.key.UP or key == arcade.key.W:
+    def on_mouse_press(self, x, y, button, key_modifiers):
+        """
+        Called when the user presses a mouse button.
+        """
+        if button == arcade.MOUSE_BUTTON_LEFT:
             self.main_movement_sprite.change_y = PLAYER_MOVEMENT_SPEED
-        elif key == arcade.key.DOWN or key == arcade.key.S:
-            self.main_movement_sprite.change_y = -PLAYER_MOVEMENT_SPEED
-        elif key == arcade.key.LEFT or key == arcade.key.A:
-            self.main_movement_sprite.change_x = -PLAYER_MOVEMENT_SPEED
-        elif key == arcade.key.RIGHT or key == arcade.key.D:
-            self.main_movement_sprite.change_x = PLAYER_MOVEMENT_SPEED
 
-    def on_key_release(self, key, modifiers):
-        """Called whenever a key is released."""
-
-        if key == arcade.key.UP or key == arcade.key.W:
+    def on_mouse_release(self, x, y, button, key_modifiers):
+        if button == arcade.MOUSE_BUTTON_LEFT:
             self.main_movement_sprite.change_y = 0
-        elif key == arcade.key.DOWN or key == arcade.key.S:
-            self.main_movement_sprite.change_y = 0
-        elif key == arcade.key.LEFT or key == arcade.key.A:
-            self.main_movement_sprite.change_x = 0
-        elif key == arcade.key.RIGHT or key == arcade.key.D:
-            self.main_movement_sprite.change_x = 0
 
 
 def main():
     """Main function"""
-    window = GameView()
+    window = MainGame()
     window.setup()
     arcade.run()
 
