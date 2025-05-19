@@ -1,5 +1,3 @@
-import random
-
 from constants import *
 from library import *
 
