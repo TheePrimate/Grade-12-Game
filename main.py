@@ -1,19 +1,17 @@
 # Main game loop goes here
+import arcade
+
 from constants import *
 from library import *
 
 
-class GameView(arcade.Window):
+class GameView(arcade.View):
    """
    Main application class.
    """
-
-
    def __init__(self):
-
-
        # Call the parent class to set up the window
-       super().__init__(WINDOW_WIDTH, WINDOW_HEIGHT, WINDOW_TITLE, fullscreen=True)
+       super().__init__()
        self.beer_texture = arcade.load_texture("assets/funnypfp.png")
        self.beer_sprite = arcade.Sprite(self.beer_texture, scale = 0.05)
        self.timer = 0
@@ -24,29 +22,19 @@ class GameView(arcade.Window):
        self.beer_sprite.center_x = WINDOW_WIDTH/2
        self.beer_sprite.center_y = WINDOW_HEIGHT/2
        self.money_quota = 100 + self.day * 20
-
-
        self.physics_engine = arcade.PhysicsEngineSimple(
            self.beer_sprite)
        self.show_quota_label = False
-
-
-
-
        self.background_color = arcade.csscolor.CORNFLOWER_BLUE
 
 
    def setup(self):
        """Set up the game here. Call this function to restart the game."""
-
-
        pass
 
 
    def on_draw(self):
        """Render the screen."""
-
-
        # The clear method should always be called at the start of on_draw.
        # It clears the whole screen to whatever the background color is
        # set to. This ensures that you have a clean slate for drawing each
@@ -66,7 +54,7 @@ class GameView(arcade.Window):
    def on_update(self, delta_time):
        self.physics_engine.update()
        if self.beer_sprite.center_y > 40:
-           self.beer_sprite.center_y += GRAVITY
+           self.beer_sprite.center_y -= GRAVITY
        self.timer += 1
        if self.timer % 1000 == 0:
            self.trigger_mob()
@@ -120,16 +108,63 @@ class GameView(arcade.Window):
        self.timer = 0
 
 
+class GameStartView(arcade.View):
+    def __init__(self):
+        super().__init__()
+        self.texture = arcade.load_texture("assets/funnypfp.png")
 
+    def setup(self):
+        pass
+
+    def on_show_view(self):
+        arcade.set_background_color(arcade.color.WHITE)
+
+    def on_draw(self):
+        self.clear()
+        arcade.draw_texture_rect(self.texture, rect=arcade.LBWH(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT))
+        arcade.draw_text("Start Screen", 100, 300, arcade.color.WHITE, 30)
+
+    def on_mouse_press(self, x: int, y: int, button: int, modifiers: int) -> bool | None:
+        game_view = GameView()
+        self.window.show_view(game_view)
+
+    def on_key_press(self, key, modifiers):
+        if key == arcade.key.ESCAPE:
+            game_view = RulesView()
+            self.window.show_view(game_view)
+
+class RulesView(arcade.View):
+    def __init__(self):
+        super().__init__()
+        self.texture = arcade.load_texture("assets/immortal jellyfish.png")
+
+    def setup(self):
+        pass
+
+    def on_show_view(self):
+        arcade.set_background_color(arcade.color.WHITE)
+
+    def on_draw(self):
+        self.clear()
+        arcade.draw_texture_rect(self.texture, rect=arcade.LBWH(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT))
+        arcade.draw_text("Rules Screen", 100, 300, arcade.color.WHITE, 30)
+
+    def on_mouse_press(self, x: int, y: int, button: int, modifiers: int) -> bool | None:
+        game_view = GameView()
+        self.window.show_view(game_view)
+
+    def on_key_press(self, key, modifiers):
+        if key == arcade.key.ESCAPE:
+            game_view = GameStartView()
+            self.window.show_view(game_view)
 
 def main():
    """Main function"""
-   window = GameView()
-   window.setup()
+   window = arcade.Window(WINDOW_WIDTH, WINDOW_HEIGHT, WINDOW_TITLE)
+   start_view = GameStartView()
+   window.show_view(start_view)
+   start_view.setup()
    arcade.run()
-
-
-
 
 if __name__ == "__main__":
    main()
