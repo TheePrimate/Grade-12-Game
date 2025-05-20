@@ -1,13 +1,6 @@
 # Main game loop goes here
-import arcade
-
-
-# Constants
-WINDOW_WIDTH = 1920
-WINDOW_HEIGHT = 1080
-WINDOW_TITLE = "PLACEHOLDER"
-PLAYER_MOVEMENT_SPEED = 30
-GRAVITY = -1
+from constants import *
+from library import *
 
 
 class GameView(arcade.Window):
@@ -140,4 +133,3 @@ def main():
 
 if __name__ == "__main__":
    main()
-
