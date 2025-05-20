@@ -15,6 +15,7 @@ class FishingMiniGame(arcade.Window):
         self.fishing_ticks = 0
         self.fishing_seconds = 0
         self.indicator_ticks = 0
+        self.indicator_seconds = 0
         self.indicator_change_speed = 0
         self.indicator_change_direction = 0
         self.indicator_change_speed_ticks = 0
@@ -23,7 +24,7 @@ class FishingMiniGame(arcade.Window):
 
         self.fishing_sprite_list = arcade.SpriteList()
         self.wall_block = arcade.SpriteList()
-        self.progress_bar_height = 30
+        self.progress_bar_height = 0
 
         self.hook_center_texture = arcade.load_texture("assets/KaydenGameBarDarrienAsCustomer.png")
         self.hook_center_sprite = arcade.Sprite(self.hook_center_texture, scale=0.1)
@@ -45,28 +46,28 @@ class FishingMiniGame(arcade.Window):
 
         self.hooking_container_top_texture = arcade.load_texture("assets/funnypfp.png")
         self.hooking_container_top_sprite = arcade.Sprite(self.hooking_container_top_texture, scale=0.05)
-        self.hooking_container_top_sprite.center_x = 28
-        self.hooking_container_top_sprite.center_y = WINDOW_HEIGHT - 41
+        self.hooking_container_top_sprite.center_x = 50
+        self.hooking_container_top_sprite.center_y = WINDOW_HEIGHT - 200
         self.fishing_sprite_list.append(self.hooking_container_top_sprite)
         self.wall_block.append(self.hooking_container_top_sprite)
 
         self.hooking_container_bot_texture = arcade.load_texture("assets/funnypfp.png")
         self.hooking_container_bot_sprite = arcade.Sprite(self.hooking_container_bot_texture, scale=0.05)
-        self.hooking_container_bot_sprite.center_x = 28
-        self.hooking_container_bot_sprite.center_y = 62
+        self.hooking_container_bot_sprite.center_x = 50
+        self.hooking_container_bot_sprite.center_y = WINDOW_HEIGHT - 920
         self.fishing_sprite_list.append(self.hooking_container_bot_sprite)
         self.wall_block.append(self.hooking_container_bot_sprite)
 
         self.hooking_container_left_texture = arcade.load_texture("assets/funnypfp.png")
         self.hooking_container_left_sprite = arcade.Sprite(self.hooking_container_left_texture, scale=0.05)
-        self.hooking_container_left_sprite.center_x = 23
-        self.hooking_container_left_sprite.center_y = WINDOW_HEIGHT / 2
+        self.hooking_container_left_sprite.center_x = 80
+        self.hooking_container_left_sprite.center_y = 583
         self.fishing_sprite_list.append(self.hooking_container_left_sprite)
 
         self.hooking_container_right_texture = arcade.load_texture("assets/funnypfp.png")
         self.hooking_container_right_sprite = arcade.Sprite(self.hooking_container_right_texture, scale=0.05)
-        self.hooking_container_right_sprite.center_x = 29
-        self.hooking_container_right_sprite.center_y = WINDOW_HEIGHT / 2
+        self.hooking_container_right_sprite.center_x = 20
+        self.hooking_container_right_sprite.center_y = 583
         self.fishing_sprite_list.append(self.hooking_container_right_sprite)
 
         self.physics_engine1 = arcade.PhysicsEnginePlatformer(self.hook_sprite, None,
@@ -111,13 +112,13 @@ class FishingMiniGame(arcade.Window):
                 if self.progress_bar_height >= 100:
                     self.fishing_minigame_activate = False
                     print("Mini Game Successful")
-                if self.fishing_ticks % 30 == 0:
+                if self.fishing_ticks % TICK_RATE == 0:
                     self.fishing_seconds += 1
                     print(self.fishing_seconds)
-            if self.fishing_ticks % 30 == 0:
-                self.fishing_seconds += 1
-                print(self.fishing_seconds)
-                if self.fishing_seconds == 20:
+            if self.indicator_ticks % TICK_RATE == 0:
+                self.indicator_seconds += 1
+                print(self.indicator_seconds)
+                if self.indicator_seconds == 20:
                     self.fishing_minigame_activate = False
                     print("Mini Game Failed")
 
@@ -125,8 +126,8 @@ class FishingMiniGame(arcade.Window):
                 self.progress_bar_height -= 1
 
             self.indicator_change_direction = random.randint(0, 1)
-            self.indicator_change_speed_ticks = random.randint(1, 2) * 30
-            self.indicator_change_direction_ticks = random.randint(1, 2) * 30
+            self.indicator_change_speed_ticks = random.randint(1, 2) * TICK_RATE
+            self.indicator_change_direction_ticks = random.randint(1, 2) * TICK_RATE
 
             if self.indicator_ticks % self.indicator_change_speed_ticks == 0:
                 self.indicator_sprite.change_y = random.randint(0, 5)
