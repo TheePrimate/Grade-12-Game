@@ -44,28 +44,28 @@ class FishingMiniGame(arcade.Window):
         self.indicator_sprite.center_y = WINDOW_HEIGHT / 2
         self.fishing_sprite_list.append(self.indicator_sprite)
 
-        self.hooking_container_top_texture = arcade.load_texture("assets/funnypfp.png")
-        self.hooking_container_top_sprite = arcade.Sprite(self.hooking_container_top_texture, scale=0.05)
+        self.hooking_container_top_texture = arcade.load_texture("assets/top_roof.png")
+        self.hooking_container_top_sprite = arcade.Sprite(self.hooking_container_top_texture)
         self.hooking_container_top_sprite.center_x = 50
         self.hooking_container_top_sprite.center_y = WINDOW_HEIGHT - 200
         self.fishing_sprite_list.append(self.hooking_container_top_sprite)
         self.wall_block.append(self.hooking_container_top_sprite)
 
-        self.hooking_container_bot_texture = arcade.load_texture("assets/funnypfp.png")
-        self.hooking_container_bot_sprite = arcade.Sprite(self.hooking_container_bot_texture, scale=0.05)
+        self.hooking_container_bot_texture = arcade.load_texture("assets/bot_floor.png")
+        self.hooking_container_bot_sprite = arcade.Sprite(self.hooking_container_bot_texture)
         self.hooking_container_bot_sprite.center_x = 50
         self.hooking_container_bot_sprite.center_y = WINDOW_HEIGHT - 920
         self.fishing_sprite_list.append(self.hooking_container_bot_sprite)
         self.wall_block.append(self.hooking_container_bot_sprite)
 
-        self.hooking_container_left_texture = arcade.load_texture("assets/funnypfp.png")
-        self.hooking_container_left_sprite = arcade.Sprite(self.hooking_container_left_texture, scale=0.05)
+        self.hooking_container_left_texture = arcade.load_texture("assets/left_wall.png")
+        self.hooking_container_left_sprite = arcade.Sprite(self.hooking_container_left_texture)
         self.hooking_container_left_sprite.center_x = 80
         self.hooking_container_left_sprite.center_y = 583
         self.fishing_sprite_list.append(self.hooking_container_left_sprite)
 
-        self.hooking_container_right_texture = arcade.load_texture("assets/funnypfp.png")
-        self.hooking_container_right_sprite = arcade.Sprite(self.hooking_container_right_texture, scale=0.05)
+        self.hooking_container_right_texture = arcade.load_texture("assets/right_wall.png")
+        self.hooking_container_right_sprite = arcade.Sprite(self.hooking_container_right_texture)
         self.hooking_container_right_sprite.center_x = 20
         self.hooking_container_right_sprite.center_y = 583
         self.fishing_sprite_list.append(self.hooking_container_right_sprite)
