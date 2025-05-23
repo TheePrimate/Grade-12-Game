@@ -28,8 +28,8 @@ class FishingMiniGame(arcade.Window):
 
         self.hook_center_texture = arcade.load_texture("assets/KaydenGameBarDarrienAsCustomer.png")
         self.hook_center_sprite = arcade.Sprite(self.hook_center_texture, scale=0.1)
-        self.hook_center_sprite.center_x = 2
-        self.hook_center_sprite.center_y = WINDOW_HEIGHT / 2
+        self.hook_center_sprite.center_x = FISHING_MINIGAME_X
+        self.hook_center_sprite.center_y = FISHING_MINIGAME_Y
         self.fishing_sprite_list.append(self.hook_center_sprite)
 
         self.hook_texture = arcade.load_texture("assets/KaydenGameBarBeerAnimation.gif")
@@ -40,34 +40,34 @@ class FishingMiniGame(arcade.Window):
 
         self.indicator_texture = arcade.load_texture("assets/KaydenGameBarDarrienAsCustomer.png")
         self.indicator_sprite = arcade.Sprite(self.indicator_texture)
-        self.indicator_sprite.center_x = 28
-        self.indicator_sprite.center_y = WINDOW_HEIGHT / 2
+        self.indicator_sprite.center_x = FISHING_MINIGAME_X
+        self.indicator_sprite.center_y = FISHING_MINIGAME_Y
         self.fishing_sprite_list.append(self.indicator_sprite)
 
-        self.hooking_container_top_texture = arcade.load_texture("assets/top_roof.png")
+        self.hooking_container_top_texture = arcade.load_texture("assets/top.png")
         self.hooking_container_top_sprite = arcade.Sprite(self.hooking_container_top_texture)
-        self.hooking_container_top_sprite.center_x = 50
-        self.hooking_container_top_sprite.center_y = WINDOW_HEIGHT - 200
+        self.hooking_container_top_sprite.center_x = FISHING_MINIGAME_X
+        self.hooking_container_top_sprite.center_y = FISHING_MINIGAME_Y
         self.fishing_sprite_list.append(self.hooking_container_top_sprite)
         self.wall_block.append(self.hooking_container_top_sprite)
 
-        self.hooking_container_bot_texture = arcade.load_texture("assets/bot_floor.png")
+        self.hooking_container_bot_texture = arcade.load_texture("assets/bot.png")
         self.hooking_container_bot_sprite = arcade.Sprite(self.hooking_container_bot_texture)
-        self.hooking_container_bot_sprite.center_x = 50
-        self.hooking_container_bot_sprite.center_y = WINDOW_HEIGHT - 920
+        self.hooking_container_bot_sprite.center_x = FISHING_MINIGAME_X
+        self.hooking_container_bot_sprite.center_y = FISHING_MINIGAME_Y
         self.fishing_sprite_list.append(self.hooking_container_bot_sprite)
         self.wall_block.append(self.hooking_container_bot_sprite)
 
-        self.hooking_container_left_texture = arcade.load_texture("assets/left_wall.png")
+        self.hooking_container_left_texture = arcade.load_texture("assets/left.png")
         self.hooking_container_left_sprite = arcade.Sprite(self.hooking_container_left_texture)
-        self.hooking_container_left_sprite.center_x = 80
-        self.hooking_container_left_sprite.center_y = 583
+        self.hooking_container_left_sprite.center_x = FISHING_MINIGAME_X
+        self.hooking_container_left_sprite.center_y = FISHING_MINIGAME_Y
         self.fishing_sprite_list.append(self.hooking_container_left_sprite)
 
-        self.hooking_container_right_texture = arcade.load_texture("assets/right_wall.png")
+        self.hooking_container_right_texture = arcade.load_texture("assets/right.png")
         self.hooking_container_right_sprite = arcade.Sprite(self.hooking_container_right_texture)
-        self.hooking_container_right_sprite.center_x = 20
-        self.hooking_container_right_sprite.center_y = 583
+        self.hooking_container_right_sprite.center_x = FISHING_MINIGAME_X
+        self.hooking_container_right_sprite.center_y = FISHING_MINIGAME_Y
         self.fishing_sprite_list.append(self.hooking_container_right_sprite)
 
         self.physics_engine1 = arcade.PhysicsEnginePlatformer(self.hook_sprite, None,
