@@ -26,7 +26,7 @@ class FishingMiniGame(arcade.Window):
         self.wall_block = arcade.SpriteList()
         self.progress_bar_height = 0
 
-        self.hook_center_texture = arcade.load_texture("assets/KaydenGameBarDarrienAsCustomer.png")
+        self.hook_center_texture = arcade.load_texture("assets/arbitrary_asset.png")
         self.hook_center_sprite = arcade.Sprite(self.hook_center_texture, scale=0.1)
         self.hook_center_sprite.center_x = FISHING_MINIGAME_X
         self.hook_center_sprite.center_y = FISHING_MINIGAME_Y
@@ -38,7 +38,7 @@ class FishingMiniGame(arcade.Window):
         self.hook_sprite.center_y = self.hook_center_sprite.center_y
         self.fishing_sprite_list.append(self.hook_sprite)
 
-        self.indicator_texture = arcade.load_texture("assets/KaydenGameBarDarrienAsCustomer.png")
+        self.indicator_texture = arcade.load_texture("assets/bar.png")
         self.indicator_sprite = arcade.Sprite(self.indicator_texture)
         self.indicator_sprite.center_x = FISHING_MINIGAME_X
         self.indicator_sprite.center_y = FISHING_MINIGAME_Y
