@@ -1,3 +1,5 @@
+import arcade
+
 from constants import *
 from library import *
 
@@ -23,40 +25,15 @@ class FishingMiniGame(arcade.Window):
         self.fishing_minigame_activate = True
 
         self.fishing_sprite_list = arcade.SpriteList()
+        self.background_list = arcade.SpriteList()
         self.wall_block = arcade.SpriteList()
         self.progress_bar_height = 0
 
-        self.hook_center_texture = arcade.load_texture("assets/arbitrary_asset.png")
-        self.hook_center_sprite = arcade.Sprite(self.hook_center_texture, scale=0.1)
-        self.hook_center_sprite.center_x = FISHING_MINIGAME_X
-        self.hook_center_sprite.center_y = FISHING_MINIGAME_Y
-        self.fishing_sprite_list.append(self.hook_center_sprite)
-
-        self.hook_texture = arcade.load_texture("assets/KaydenGameBarBeerAnimation.gif")
-        self.hook_sprite = arcade.Sprite(self.hook_texture)
-        self.hook_sprite.center_x = self.hook_center_sprite.center_x
-        self.hook_sprite.center_y = self.hook_center_sprite.center_y
-        self.fishing_sprite_list.append(self.hook_sprite)
-
-        self.indicator_texture = arcade.load_texture("assets/bar.png")
-        self.indicator_sprite = arcade.Sprite(self.indicator_texture)
-        self.indicator_sprite.center_x = FISHING_MINIGAME_X
-        self.indicator_sprite.center_y = FISHING_MINIGAME_Y
-        self.fishing_sprite_list.append(self.indicator_sprite)
-
-        self.hooking_container_top_texture = arcade.load_texture("assets/top.png")
-        self.hooking_container_top_sprite = arcade.Sprite(self.hooking_container_top_texture)
-        self.hooking_container_top_sprite.center_x = FISHING_MINIGAME_X
-        self.hooking_container_top_sprite.center_y = FISHING_MINIGAME_Y
-        self.fishing_sprite_list.append(self.hooking_container_top_sprite)
-        self.wall_block.append(self.hooking_container_top_sprite)
-
-        self.hooking_container_bot_texture = arcade.load_texture("assets/bot.png")
-        self.hooking_container_bot_sprite = arcade.Sprite(self.hooking_container_bot_texture)
-        self.hooking_container_bot_sprite.center_x = FISHING_MINIGAME_X
-        self.hooking_container_bot_sprite.center_y = FISHING_MINIGAME_Y
-        self.fishing_sprite_list.append(self.hooking_container_bot_sprite)
-        self.wall_block.append(self.hooking_container_bot_sprite)
+        self.background_texture = arcade.load_texture('assets/background.png')
+        self.background_sprite = arcade.Sprite(self.background_texture)
+        self.background_sprite.center_x = WINDOW_WIDTH / 2
+        self.background_sprite.center_y = WINDOW_HEIGHT / 2
+        self.background_list.append(self.background_sprite)
 
         self.hooking_container_left_texture = arcade.load_texture("assets/left.png")
         self.hooking_container_left_sprite = arcade.Sprite(self.hooking_container_left_texture)
@@ -69,6 +46,39 @@ class FishingMiniGame(arcade.Window):
         self.hooking_container_right_sprite.center_x = FISHING_MINIGAME_X
         self.hooking_container_right_sprite.center_y = FISHING_MINIGAME_Y
         self.fishing_sprite_list.append(self.hooking_container_right_sprite)
+
+        self.hooking_container_bot_texture = arcade.load_texture("assets/bot.png")
+        self.hooking_container_bot_sprite = arcade.Sprite(self.hooking_container_bot_texture)
+        self.hooking_container_bot_sprite.center_x = FISHING_MINIGAME_X
+        self.hooking_container_bot_sprite.center_y = FISHING_MINIGAME_Y
+        self.fishing_sprite_list.append(self.hooking_container_bot_sprite)
+        self.wall_block.append(self.hooking_container_bot_sprite)
+
+        self.hooking_container_top_texture = arcade.load_texture("assets/top.png")
+        self.hooking_container_top_sprite = arcade.Sprite(self.hooking_container_top_texture)
+        self.hooking_container_top_sprite.center_x = FISHING_MINIGAME_X
+        self.hooking_container_top_sprite.center_y = FISHING_MINIGAME_Y
+        self.fishing_sprite_list.append(self.hooking_container_top_sprite)
+        self.wall_block.append(self.hooking_container_top_sprite)
+
+        self.indicator_texture = arcade.load_texture("assets/bar.png")
+        self.indicator_sprite = arcade.Sprite(self.indicator_texture)
+        self.indicator_sprite.center_x = FISHING_MINIGAME_X
+        self.indicator_sprite.center_y = FISHING_MINIGAME_Y
+        self.fishing_sprite_list.append(self.indicator_sprite)
+
+        self.hook_center_texture = arcade.load_texture("assets/arbitrary_asset.png")
+        self.hook_center_sprite = arcade.Sprite(self.hook_center_texture)
+        self.hook_center_sprite.visible = False
+        self.hook_center_sprite.center_x = FISHING_MINIGAME_X
+        self.hook_center_sprite.center_y = FISHING_MINIGAME_Y
+        self.fishing_sprite_list.append(self.hook_center_sprite)
+
+        self.hook_texture = arcade.load_texture("assets/hook.png")
+        self.hook_sprite = arcade.Sprite(self.hook_texture)
+        self.hook_sprite.center_x = self.hook_center_sprite.center_x
+        self.hook_sprite.center_y = self.hook_center_sprite.center_y
+        self.fishing_sprite_list.append(self.hook_sprite)
 
         self.physics_engine1 = arcade.PhysicsEnginePlatformer(self.hook_sprite, None,
                                                               GRAVITY, None, self.wall_block)
@@ -90,10 +100,13 @@ class FishingMiniGame(arcade.Window):
         # set to. This ensures that you have a clean slate for drawing each
         # frame of the game.
         self.clear()
+
+        self.background_list.draw()
+
         if self.fishing_minigame_activate is True:
-            arcade.draw_lbwh_rectangle_filled(50, 50, 50, self.progress_bar_height, (255, 0, 0))
-            arcade.draw_text(f'{self.progress_bar_height}%', 50, 50)
-            self.fishing_sprite_list.draw()
+            arcade.draw_lbwh_rectangle_filled(300, 300, 50, self.progress_bar_height, (255, 0, 0))
+            arcade.draw_text(f'{self.progress_bar_height}%', 300, 300)
+            self.fishing_sprite_list.draw(pixelated=True)
 
     def on_update(self, delta_time):
         if self.fishing_minigame_activate is True:
