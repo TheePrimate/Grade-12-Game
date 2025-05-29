@@ -1,6 +1,7 @@
 from constants import *
 from library import *
 
+print(fish_data["Rainbow Trout"][2])
 
 class FishingMiniGame(arcade.Window):
     """
