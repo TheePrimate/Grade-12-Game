@@ -1,5 +1,3 @@
-import arcade
-
 from constants import *
 from library import *
 
@@ -27,7 +25,7 @@ class FishingMiniGame(arcade.Window):
         self.fishing_sprite_list = arcade.SpriteList()
         self.background_list = arcade.SpriteList()
         self.wall_block = arcade.SpriteList()
-        self.progress_bar_height = 0
+        self.progress_bar_height = 50
 
         self.background_texture = arcade.load_texture('assets/background.png')
         self.background_sprite = arcade.Sprite(self.background_texture)
@@ -104,9 +102,9 @@ class FishingMiniGame(arcade.Window):
         self.background_list.draw()
 
         if self.fishing_minigame_activate is True:
+            self.fishing_sprite_list.draw(pixelated=True)
             arcade.draw_lbwh_rectangle_filled(300, 300, 50, self.progress_bar_height, (255, 0, 0))
             arcade.draw_text(f'{self.progress_bar_height}%', 300, 300)
-            self.fishing_sprite_list.draw(pixelated=True)
 
     def on_update(self, delta_time):
         if self.fishing_minigame_activate is True:
@@ -155,6 +153,7 @@ class FishingMiniGame(arcade.Window):
         """
         if button == arcade.MOUSE_BUTTON_LEFT:
             self.hook_sprite.change_y = PLAYER_MOVEMENT_SPEED
+            print(x, y)
 
 
 def main():
