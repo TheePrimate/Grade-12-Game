@@ -1,7 +1,13 @@
-from constants import *
 from library import *
 
-print(fish_data["Rainbow Trout"][2])
+current_fish = choice(FISH_LIST, 10, p=[0.25, 0.25, 0.1, 0.1, 0.05, 0.05, ])
+
+print(current_fish)
+print(fish_data[current_fish][0])
+print(fish_data[current_fish][1])
+print(fish_data[current_fish][2])
+print(fish_data[current_fish][3])
+
 
 class FishingMiniGame(arcade.Window):
     """
