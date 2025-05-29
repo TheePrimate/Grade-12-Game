@@ -1,6 +1,6 @@
 # Main game loop goes here
 
-from constants import *
+# from constants import *
 from library import *
 
 
@@ -58,7 +58,7 @@ class GameView(arcade.View):
         self.lose = False
         # Variable that lets us show a missed fish label for a few seconds
         self.show_missed_label = False
-        # Lets us know when the main loop is going on and not any mini games
+        # Lets us know when the main loop is going on and not any minigames
         self.main_loop = True
         self.background_color = arcade.csscolor.CORNFLOWER_BLUE
 
