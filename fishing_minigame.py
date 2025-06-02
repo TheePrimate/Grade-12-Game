@@ -82,19 +82,19 @@ class FishingMiniGame(arcade.Window):
         self.indicator_sprite.center_y = FISHING_MINIGAME_Y
         self.fishing_sprite_list.append(self.indicator_sprite)
 
-        self.hook_center_texture = arcade.load_texture("assets/arbitrary_asset.png")
-        self.hook_center_sprite = arcade.Sprite(self.hook_center_texture)
-        self.hook_center_sprite.visible = False
-        self.hook_center_sprite.center_x = FISHING_MINIGAME_X
-        self.hook_center_sprite.center_y = FISHING_MINIGAME_Y
-        self.fishing_sprite_list.append(self.hook_center_sprite)
-
         self.hook_texture = arcade.load_texture("assets/hook.png")
         self.hook_sprite = arcade.Sprite(self.hook_texture)
         self.hook_sprite.center_x = FISHING_MINIGAME_X
         self.hook_sprite.center_y = FISHING_MINIGAME_Y
         self.fishing_sprite_list.append(self.hook_sprite)
 
+        self.hook_center_texture = arcade.load_texture("assets/arbitrary_asset.png")
+        self.hook_center_sprite = arcade.Sprite(self.hook_center_texture)
+        self.hook_center_sprite.visible = True
+        self.hook_center_sprite.center_x = self.hook_sprite.center_x
+        self.hook_center_sprite.center_y = self.hook_sprite.center_y
+        self.fishing_sprite_list.append(self.hook_center_sprite)
+              
         self.progress_bar_texture = arcade.load_texture("assets/progress_bar.png")
         self.progress_bar_sprite = arcade.Sprite(self.progress_bar_texture)
         self.progress_bar_sprite.center_x = FISHING_MINIGAME_X
@@ -139,9 +139,9 @@ class FishingMiniGame(arcade.Window):
             self.hook_center_sprite.center_y = self.hook_sprite.center_y
 
             self.collision = arcade.check_for_collision(self.hook_center_sprite, self.indicator_sprite)
+
             if self.collision is True:
                 self.fishing_ticks += 1
-
                 if self.progress_bar_height < 100:
                     self.progress_bar_height += 3
                 if self.progress_bar_height >= 100:
@@ -173,8 +173,10 @@ class FishingMiniGame(arcade.Window):
 
             if self.mouse_hold:
                 self.hook_sprite.change_y = HOOK_MOVEMENT_SPEED
+                self.hook_center_sprite.change_y = HOOK_MOVEMENT_SPEED
             else:
                 self.hook_sprite.change_y = -HOOK_MOVEMENT_SPEED
+                self.hook_center_sprite.change_y = -HOOK_MOVEMENT_SPEED
 
     def on_mouse_press(self, x, y, button, key_modifiers):
         """
