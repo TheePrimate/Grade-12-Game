@@ -4,7 +4,7 @@ from constants import *
 from numpy.random import choice
 
 # Dollars, difficulty, sprite name
-
+'''''
 fish_data = {
     "Northern Pike": [100, DIFFICULTY_1, "ph"],
     "Cod": [150, DIFFICULTY_2, "assets/cod.png"],
@@ -17,3 +17,4 @@ fish_data = {
     "Immortal Jellyfish": [0.3, DIFFICULTY_9, "ph"],
     "Ancient Mariner's Albatross": [553000, DIFFICULTY_10, "assets/albatross.png"],
 }
+'''''

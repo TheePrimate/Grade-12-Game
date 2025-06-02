@@ -1,5 +1,8 @@
+from pyglet.event import EVENT_HANDLE_STATE
+
 from library import *
 
+''''
 current_fish = choice(FISH_LIST, 10, p=[0.25, 0.25, 0.1, 0.1, 0.05, 0.05, ])
 
 print(current_fish)
@@ -7,7 +10,7 @@ print(fish_data[current_fish][0])
 print(fish_data[current_fish][1])
 print(fish_data[current_fish][2])
 print(fish_data[current_fish][3])
-
+'''''
 
 class FishingMiniGame(arcade.Window):
     """
@@ -27,6 +30,7 @@ class FishingMiniGame(arcade.Window):
         self.indicator_change_direction = 0
         self.indicator_change_speed_ticks = 0
         self.indicator_change_direction_ticks = 0
+        self.mouse_hold = False
         self.fishing_minigame_activate = True
 
         self.fishing_sprite_list = arcade.SpriteList()
@@ -39,6 +43,12 @@ class FishingMiniGame(arcade.Window):
         self.background_sprite.center_x = WINDOW_WIDTH / 2
         self.background_sprite.center_y = WINDOW_HEIGHT / 2
         self.background_list.append(self.background_sprite)
+
+        self.background_bar_texture = arcade.load_texture("assets/blue.png")
+        self.background_bar_sprite = arcade.Sprite(self.background_bar_texture)
+        self.background_bar_sprite.center_x = FISHING_MINIGAME_X
+        self.background_bar_sprite.center_y = FISHING_MINIGAME_Y
+        self.fishing_sprite_list.append(self.background_bar_sprite)
 
         self.hooking_container_left_texture = arcade.load_texture("assets/left.png")
         self.hooking_container_left_sprite = arcade.Sprite(self.hooking_container_left_texture)
@@ -81,9 +91,15 @@ class FishingMiniGame(arcade.Window):
 
         self.hook_texture = arcade.load_texture("assets/hook.png")
         self.hook_sprite = arcade.Sprite(self.hook_texture)
-        self.hook_sprite.center_x = self.hook_center_sprite.center_x
-        self.hook_sprite.center_y = self.hook_center_sprite.center_y
+        self.hook_sprite.center_x = FISHING_MINIGAME_X
+        self.hook_sprite.center_y = FISHING_MINIGAME_Y
         self.fishing_sprite_list.append(self.hook_sprite)
+
+        self.progress_bar_texture = arcade.load_texture("assets/progress_bar.png")
+        self.progress_bar_sprite = arcade.Sprite(self.progress_bar_texture)
+        self.progress_bar_sprite.center_x = FISHING_MINIGAME_X
+        self.progress_bar_sprite.center_y = FISHING_MINIGAME_Y
+        self.fishing_sprite_list.append(self.progress_bar_sprite)
 
         self.physics_engine1 = arcade.PhysicsEnginePlatformer(self.hook_sprite, None,
                                                               GRAVITY, None, self.wall_block)
@@ -125,6 +141,7 @@ class FishingMiniGame(arcade.Window):
             self.collision = arcade.check_for_collision(self.hook_center_sprite, self.indicator_sprite)
             if self.collision is True:
                 self.fishing_ticks += 1
+
                 if self.progress_bar_height < 100:
                     self.progress_bar_height += 3
                 if self.progress_bar_height >= 100:
@@ -154,14 +171,22 @@ class FishingMiniGame(arcade.Window):
                 if self.indicator_change_direction == 1:
                     self.indicator_sprite.change_y = -self.indicator_sprite.change_y
 
+            if self.mouse_hold:
+                self.hook_sprite.change_y = HOOK_MOVEMENT_SPEED
+            else:
+                self.hook_sprite.change_y = -HOOK_MOVEMENT_SPEED
+
     def on_mouse_press(self, x, y, button, key_modifiers):
         """
         Called when the user presses a mouse button.
         """
         if button == arcade.MOUSE_BUTTON_LEFT:
-            self.hook_sprite.change_y = PLAYER_MOVEMENT_SPEED
+            self.mouse_hold = True
             print(x, y)
 
+    def on_mouse_release(self, x, y, button, key_modifiers):
+        if button == arcade.MOUSE_BUTTON_LEFT:
+            self.mouse_hold = False
 
 def main():
     """Main function"""
