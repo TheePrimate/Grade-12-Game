@@ -2,6 +2,7 @@ from pyglet.event import EVENT_HANDLE_STATE
 
 from library import *
 
+<<<<<<< Updated upstream
 ''''
 current_fish = choice(FISH_LIST, 10, p=[0.25, 0.25, 0.1, 0.1, 0.05, 0.05, ])
 
@@ -12,6 +13,8 @@ print(fish_data[current_fish][2])
 print(fish_data[current_fish][3])
 '''''
 
+=======
+>>>>>>> Stashed changes
 
 class FishingMiniGame(arcade.Window):
     """
@@ -33,9 +36,11 @@ class FishingMiniGame(arcade.Window):
         self.indicator_change_direction_ticks = 0
         self.mouse_hold = False
         self.fishing_minigame_activate = True
+        self.choose_fish = True
 
         self.fishing_sprite_list = arcade.SpriteList()
         self.background_list = arcade.SpriteList()
+        self.current_fish_list = arcade.SpriteList()
         self.wall_block = arcade.SpriteList()
         self.progress_bar_height = 0
 
@@ -108,6 +113,14 @@ class FishingMiniGame(arcade.Window):
 
         self.collision = None
 
+        self.current_value = None
+        self.current_time_limit = None
+        self.current_sprite = None
+        self.current_fish_texture = None
+        self.current_fish_sprite = None
+        self.current_difficulty_low = None
+        self.current_difficulty_high = None
+
     def setup(self):
         """Set up the game here. Call this function to restart the game."""
 
@@ -125,11 +138,29 @@ class FishingMiniGame(arcade.Window):
         self.background_list.draw()
         if self.fishing_minigame_activate is True:
             self.fishing_sprite_list.draw(pixelated=True)
+            self.current_fish_list.draw(pixelated=True)
             arcade.draw_lbwh_rectangle_filled(300, 300, 50, self.progress_bar_height, (255, 0, 0))
             arcade.draw_text(f'{self.progress_bar_height}%', 300, 300)
 
     def on_update(self, delta_time):
         if self.fishing_minigame_activate is True:
+            if self.choose_fish is True:
+                current_fish = random.choices(FISH_LIST, weights=[0.20, 0.20, 0.15, 0.15, 0.05, 0.05,
+                                                                  0.025, 0.025, 0.02, 0.02, 0.11], k=1)[0]
+
+                self.current_value = fish_data[current_fish][0]
+                self.current_difficulty_low = fish_data[current_fish][1]
+                self.current_difficulty_high = fish_data[current_fish][2]
+                self.current_time_limit = fish_data[current_fish][3]
+                self.current_sprite = fish_data[current_fish][4]
+
+                self.current_fish_texture = arcade.load_texture(self.current_sprite)
+                self.current_fish_sprite = arcade.Sprite(self.current_fish_texture)
+                self.current_fish_sprite.center_x = WINDOW_WIDTH/2
+                self.current_fish_sprite.center_y = WINDOW_HEIGHT/2
+                self.current_fish_list.append(self.current_fish_sprite)
+                self.choose_fish = False
+                
             self.indicator_ticks += 1
             self.fishing_sprite_list.update()
             self.physics_engine1.update()
@@ -159,7 +190,7 @@ class FishingMiniGame(arcade.Window):
             if self.indicator_ticks % TICK_RATE == 0:
                 self.indicator_seconds += 1
                 print(self.indicator_seconds)
-                if self.indicator_seconds == 20:
+                if self.indicator_seconds == self.current_time_limit:
                     self.fishing_minigame_activate = False
                     print("Mini Game Failed")
 
@@ -168,7 +199,8 @@ class FishingMiniGame(arcade.Window):
             self.indicator_change_direction_ticks = random.randint(1, 2) * TICK_RATE
 
             if self.indicator_ticks % self.indicator_change_speed_ticks == 0:
-                self.indicator_sprite.change_y = random.randint(0, 5)
+                self.indicator_sprite.change_y = random.randint(self.current_difficulty_low,
+                                                                self.current_difficulty_high)
 
             if self.indicator_ticks % self.indicator_change_direction_ticks == 0:
                 if self.indicator_change_direction == 1:
