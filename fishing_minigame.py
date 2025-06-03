@@ -1,20 +1,5 @@
-from pyglet.event import EVENT_HANDLE_STATE
-
 from library import *
 
-<<<<<<< Updated upstream
-''''
-current_fish = choice(FISH_LIST, 10, p=[0.25, 0.25, 0.1, 0.1, 0.05, 0.05, ])
-
-print(current_fish)
-print(fish_data[current_fish][0])
-print(fish_data[current_fish][1])
-print(fish_data[current_fish][2])
-print(fish_data[current_fish][3])
-'''''
-
-=======
->>>>>>> Stashed changes
 
 class FishingMiniGame(arcade.Window):
     """
@@ -139,15 +124,18 @@ class FishingMiniGame(arcade.Window):
         if self.fishing_minigame_activate is True:
             self.fishing_sprite_list.draw(pixelated=True)
             self.current_fish_list.draw(pixelated=True)
-            arcade.draw_lbwh_rectangle_filled(300, 300, 50, self.progress_bar_height, (255, 0, 0))
-            arcade.draw_text(f'{self.progress_bar_height}%', 300, 300)
 
     def on_update(self, delta_time):
         if self.fishing_minigame_activate is True:
             if self.choose_fish is True:
                 current_fish = random.choices(FISH_LIST, weights=[0.20, 0.20, 0.15, 0.15, 0.05, 0.05,
                                                                   0.025, 0.025, 0.02, 0.02, 0.11], k=1)[0]
-
+                print("Fish Caught:", current_fish)
+                print("Worth:", fish_data[current_fish][0], "$")
+                print("Lower-Bound Diff:", fish_data[current_fish][1])
+                print("Upper-Bound Diff:", fish_data[current_fish][2])
+                print("Time Limit:", fish_data[current_fish][3])
+                print("Sprite Name:", fish_data[current_fish][4])
                 self.current_value = fish_data[current_fish][0]
                 self.current_difficulty_low = fish_data[current_fish][1]
                 self.current_difficulty_high = fish_data[current_fish][2]
@@ -167,12 +155,10 @@ class FishingMiniGame(arcade.Window):
             self.physics_engine2.update()
 
             self.collision = arcade.check_for_collision(self.hook_sprite, self.indicator_sprite)
-            print(self.progress_bar_bar_sprite.height)
 
-            if self.collision:
+            if self.collision is True:
                 self.fishing_ticks += 1
                 if self.progress_bar_bar_sprite.height < 1200:
-                    print(self.progress_bar_height)
                     self.progress_bar_height += 1
                     self.progress_bar_bar_sprite.bottom = 224
                     self.progress_bar_bar_sprite.height += 1
@@ -181,18 +167,17 @@ class FishingMiniGame(arcade.Window):
                     print("Mini Game Successful")
                 if self.fishing_ticks % TICK_RATE == 0:
                     self.fishing_seconds += 1
-                    print(self.fishing_seconds)
+                    print("Progress:", self.fishing_seconds)
             else:
                 if self.progress_bar_bar_sprite.height > 0:
                     self.progress_bar_bar_sprite.bottom = 224
                     self.progress_bar_bar_sprite.height -= 1
-
-            if self.indicator_ticks % TICK_RATE == 0:
-                self.indicator_seconds += 1
-                print(self.indicator_seconds)
-                if self.indicator_seconds == self.current_time_limit:
-                    self.fishing_minigame_activate = False
-                    print("Mini Game Failed")
+                    if self.indicator_ticks % TICK_RATE == 0:
+                        self.indicator_seconds += 1
+                        print("Losing:", self.indicator_seconds)
+                        if self.indicator_seconds == self.current_time_limit:
+                            self.fishing_minigame_activate = False
+                            print("Mini Game Failed")
 
             self.indicator_change_direction = random.randint(0, 1)
             self.indicator_change_speed_ticks = random.randint(1, 2) * TICK_RATE
@@ -217,7 +202,6 @@ class FishingMiniGame(arcade.Window):
         """
         if button == arcade.MOUSE_BUTTON_LEFT:
             self.mouse_hold = True
-            print(x, y)
 
     def on_mouse_release(self, x, y, button, key_modifiers):
         if button == arcade.MOUSE_BUTTON_LEFT:
