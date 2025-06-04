@@ -1,4 +1,4 @@
-import arcade.uicolor
+import arcade.color
 
 from library import *
 
@@ -36,6 +36,7 @@ class GameView(arcade.View):
         self.hand_vel = 5
         self.san_der = 0
         self.sanity = 459
+        self.death = False
 
         # Setup mine sprites
         self.mine_list = arcade.SpriteList()
@@ -50,6 +51,9 @@ class GameView(arcade.View):
         self.hand_texture = arcade.load_texture("assets/hand.png")
         self.hand_sprite = arcade.Sprite(self.hand_texture, center_x=self.handX, center_y=self.handY)
         self.mine_list.append(self.hand_sprite)
+        self.insanity_texture = arcade.load_texture("assets/insanity.png")
+        self.insanity_sprite = arcade.Sprite(self.insanity_texture, center_x=WINDOW_WIDTH/2, center_y=WINDOW_HEIGHT/2
+                                             , alpha=100)
         # If you have sprite lists, you should create them here,
         # and set them to None
 
@@ -72,21 +76,25 @@ class GameView(arcade.View):
             arcade.draw_lrbt_rectangle_filled(103, 165.4, 219, 219+self.sanity,
                                               arcade.color.AIR_SUPERIORITY_BLUE)
 
+            # Draw insanity blackout
+
+
     def on_update(self, delta_time):
-        # If the naval mine minigame is engaged execute the following
+        # If the naval mine mini-game is engaged execute the following
         if self.fish == "mine":
             # Oscillate hand
             if self.hand_sprite.center_x <= 300:
                 self.hand_vel = 3
-                self.san_der -= 2*self.san_der
+                self.san_der += 2*self.san_der
             elif self.hand_sprite.center_x >= 700:
                 self.hand_vel = -3
-                self.san_der += 2*self.san_der
+                self.san_der -= 2*self.san_der
             self.hand_sprite.center_x += self.hand_vel + self.san_der
 
             # Sanity
-            self.sanity -= 1
-            self.san_der += 0
+            self.sanity -= 0.5
+            self.san_der += 0.1
+            self.insanity_sprite.alpha = self.sanity/4.59
 
     def on_key_press(self, key, key_modifiers):
         """
@@ -111,6 +119,13 @@ class GameView(arcade.View):
 
     def on_mouse_press(self, x, y, button, key_modifiers):
         print(x, y)
+        if self.fish == "mine":
+            if 300 < self.handX < 400:
+                print("Bomb Disarmed")
+                self.fish = "Disarmed"
+            elif 400 < self.handX < 450 or 200 < self.handX < 250 or 450 < self.handX < 500:
+                self.death = True
+                self.sanity = 0
 
     def on_mouse_release(self, x, y, button, key_modifiers):
         """
