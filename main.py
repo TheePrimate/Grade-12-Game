@@ -13,7 +13,7 @@ class GameView(arcade.View):
         super().__init__()
         # Loads the texture to become sprites of the bob, and the background
         self.bob_texture = arcade.load_texture("assets/arbitrary_asset.png")
-        self.background_texture = arcade.load_texture("assets/Hamlet.png")
+        self.background_texture = arcade.load_texture("assets/background.png")
         self.background_sprite = arcade.Sprite(self.background_texture, scale = 1)
         self.bob_sprite = arcade.Sprite(self.bob_texture, scale = 2)
         # Loop variables
@@ -62,11 +62,9 @@ class GameView(arcade.View):
         self.main_loop = True
         self.background_color = arcade.csscolor.CORNFLOWER_BLUE
 
-
     def setup(self):
         """Set up the game here. Call this function to restart the game."""
         pass
-
 
     def on_draw(self):
         """Render the screen."""
@@ -89,8 +87,6 @@ class GameView(arcade.View):
         if self.is_fishing:
             self.bobber_animation = True
             arcade.draw_sprite(self.bob_sprite)
-
-
 
     def on_update(self, delta_time):
         # Tick timer, every tick add one there are 60 ticks in a second

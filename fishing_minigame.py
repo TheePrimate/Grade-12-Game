@@ -1,3 +1,5 @@
+import arcade
+
 from library import *
 
 
@@ -28,6 +30,7 @@ class FishingMiniGame(arcade.Window):
         self.current_fish_list = arcade.SpriteList()
         self.wall_block = arcade.SpriteList()
         self.progress_bar_height = 0
+
 
         self.background_texture = arcade.load_texture('assets/background.png')
         self.background_sprite = arcade.Sprite(self.background_texture)
@@ -91,6 +94,17 @@ class FishingMiniGame(arcade.Window):
         self.progress_bar_bar_sprite.center_y = FISHING_MINIGAME_Y
         self.fishing_sprite_list.append(self.progress_bar_bar_sprite)
 
+        # Basic Animation... Follow these steps
+        jellyfish_sheet = arcade.load_spritesheet("assets/immortal_jellyfish.png")
+        texture_list = jellyfish_sheet.get_texture_grid(size=(1350, 756), columns=8, count=8)
+        frames = []
+        for tex in texture_list:
+            frames.append(arcade.TextureKeyframe(tex))
+        anim = arcade.TextureAnimation(frames)
+        self.immortal_jellyfish = arcade.TextureAnimationSprite(animation=anim)
+        self.immortal_jellyfish.position = WINDOW_WIDTH/2, WINDOW_HEIGHT/2
+        self.fishing_sprite_list.append(self.immortal_jellyfish)
+
         self.physics_engine1 = arcade.PhysicsEnginePlatformer(self.hook_sprite, None,
                                                               GRAVITY, None, self.wall_block)
         self.physics_engine2 = arcade.PhysicsEnginePlatformer(self.indicator_sprite, None,
@@ -126,6 +140,7 @@ class FishingMiniGame(arcade.Window):
             self.current_fish_list.draw(pixelated=True)
 
     def on_update(self, delta_time):
+        self.fishing_sprite_list.update_animation()
         if self.fishing_minigame_activate is True:
             if self.choose_fish is True:
                 current_fish = random.choices(FISH_LIST, weights=[0.20, 0.20, 0.15, 0.15, 0.05, 0.05,
@@ -156,12 +171,10 @@ class FishingMiniGame(arcade.Window):
             self.physics_engine2.update()
 
             self.collision = arcade.check_for_collision(self.hook_sprite, self.indicator_sprite)
-            print(self.progress_bar_bar_sprite.height)
 
             if self.collision is True:
                 self.fishing_ticks += 1
                 if self.progress_bar_bar_sprite.height < 1700:
-                    self.progress_bar_height += 1
                     self.progress_bar_bar_sprite.bottom = 224
                     self.progress_bar_bar_sprite.height += 3
                 if self.progress_bar_bar_sprite.height >= 1700:
