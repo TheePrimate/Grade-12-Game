@@ -147,6 +147,7 @@ class FishingMiniGame(arcade.Window):
                 self.current_fish_sprite.center_x = WINDOW_WIDTH/2
                 self.current_fish_sprite.center_y = WINDOW_HEIGHT/2
                 self.current_fish_list.append(self.current_fish_sprite)
+
                 self.choose_fish = False
                 
             self.indicator_ticks += 1
@@ -155,14 +156,15 @@ class FishingMiniGame(arcade.Window):
             self.physics_engine2.update()
 
             self.collision = arcade.check_for_collision(self.hook_sprite, self.indicator_sprite)
+            print(self.progress_bar_bar_sprite.height)
 
             if self.collision is True:
                 self.fishing_ticks += 1
-                if self.progress_bar_bar_sprite.height < 1200:
+                if self.progress_bar_bar_sprite.height < 1700:
                     self.progress_bar_height += 1
                     self.progress_bar_bar_sprite.bottom = 224
-                    self.progress_bar_bar_sprite.height += 1
-                if self.progress_bar_bar_sprite.height >= 1200:
+                    self.progress_bar_bar_sprite.height += 3
+                if self.progress_bar_bar_sprite.height >= 1700:
                     self.fishing_minigame_activate = False
                     print("Mini Game Successful")
                 if self.fishing_ticks % TICK_RATE == 0:
@@ -171,14 +173,16 @@ class FishingMiniGame(arcade.Window):
             else:
                 if self.progress_bar_bar_sprite.height > 0:
                     self.progress_bar_bar_sprite.bottom = 224
-                    self.progress_bar_bar_sprite.height -= 1
+                    self.progress_bar_bar_sprite.height -= 3
                     if self.indicator_ticks % TICK_RATE == 0:
                         self.indicator_seconds += 1
                         print("Losing:", self.indicator_seconds)
                         if self.indicator_seconds == self.current_time_limit:
                             self.fishing_minigame_activate = False
                             print("Mini Game Failed")
-
+                    if self.progress_bar_bar_sprite.height == 0:
+                        self.fishing_minigame_activate = False
+                        print('Mini Game Failed')
             self.indicator_change_direction = random.randint(0, 1)
             self.indicator_change_speed_ticks = random.randint(1, 2) * TICK_RATE
             self.indicator_change_direction_ticks = random.randint(1, 2) * TICK_RATE
