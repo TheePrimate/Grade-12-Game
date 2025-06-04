@@ -1,3 +1,5 @@
+import arcade.uicolor
+
 from library import *
 
 """
@@ -30,10 +32,10 @@ class GameView(arcade.View):
         self.mineX = 500
         self.mineY = 530
         self.handX = 500
-        self.handY = 400
-        self.hand_vel = None
-        self.san_der = None
-        self.sanity = 100
+        self.handY = 340
+        self.hand_vel = 5
+        self.san_der = 0
+        self.sanity = 459
 
         # Setup mine sprites
         self.mine_list = arcade.SpriteList()
@@ -42,11 +44,12 @@ class GameView(arcade.View):
         self.mine_sprite = arcade.Sprite(self.mine_texture, center_x=self.mineX, center_y=self.mineY)
         self.mine_list.append(self.mine_sprite)
         self.sanity_bar_texture = arcade.load_texture("assets/SanityBar.png")
-        self.sanity_bar_sprite = arcade.Sprite(self.sanity_bar_texture, center_x= FISHING_MINIGAME_X,
-                                               center_y= FISHING_MINIGAME_Y)
+        self.sanity_bar_sprite = arcade.Sprite(self.sanity_bar_texture, center_x=FISHING_MINIGAME_X,
+                                               center_y=FISHING_MINIGAME_Y)
         self.mine_list.append(self.sanity_bar_sprite)
-        self.hand_texture = arcade.load_texture("hand.png")
+        self.hand_texture = arcade.load_texture("assets/hand.png")
         self.hand_sprite = arcade.Sprite(self.hand_texture, center_x=self.handX, center_y=self.handY)
+        self.mine_list.append(self.hand_sprite)
         # If you have sprite lists, you should create them here,
         # and set them to None
 
@@ -66,16 +69,24 @@ class GameView(arcade.View):
         # Call draw() on all your sprite lists below
         if self.fish == "mine":
             self.mine_list.draw(pixelated=True)
-
-        arcade.draw_lrbt_rectangle_filled(200,250,500,650,arcade.color.ANTI_FLASH_WHITE)
+            arcade.draw_lrbt_rectangle_filled(103, 165.4, 219, 219+self.sanity,
+                                              arcade.color.AIR_SUPERIORITY_BLUE)
 
     def on_update(self, delta_time):
-        """
-        All the logic to move, and the game logic goes here.
-        Normally, you'll call update() on the sprite lists that
-        need it.
-        """
-        pass
+        # If the naval mine minigame is engaged execute the following
+        if self.fish == "mine":
+            # Oscillate hand
+            if self.hand_sprite.center_x <= 300:
+                self.hand_vel = 3
+                self.san_der -= 2*self.san_der
+            elif self.hand_sprite.center_x >= 700:
+                self.hand_vel = -3
+                self.san_der += 2*self.san_der
+            self.hand_sprite.center_x += self.hand_vel + self.san_der
+
+            # Sanity
+            self.sanity -= 1
+            self.san_der += 0
 
     def on_key_press(self, key, key_modifiers):
         """
@@ -113,7 +124,7 @@ def main():
     # Create a window class. This is what actually shows up on screen
     window = arcade.Window(WINDOW_WIDTH, WINDOW_HEIGHT, WINDOW_TITLE)
 
-    # Create and setup the GameView
+    # Create and set up the GameView
     game = GameView()
 
     # Show GameView on screen
@@ -121,7 +132,6 @@ def main():
 
     # Start the arcade game loop
     arcade.run()
-
 
 
 if __name__ == "__main__":
