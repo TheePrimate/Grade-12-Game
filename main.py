@@ -137,10 +137,13 @@ class GameView(arcade.View):
             self.fish_ticks += 1
             self.button_appear = True
             if self.fish_ticks >= 180:
+                self.fish_ticks = 0
                 self.is_fishing = False
                 self.button_appear = False
                 self.show_missed_label = True
                 self.fish_is_ready = False
+                print(self.main_loop)
+                self.main_loop = True
 
     def on_key_press(self, key, modifiers):
         """Called whenever a key is pressed."""
@@ -165,13 +168,23 @@ class GameView(arcade.View):
             if self.fish_ticks < 180 and distance_squared <= 50**2:
                 self.fishing_minigame_activate = True
                 print('minigame activated')
-                self.bobber_animation = False
-                self.fish_is_ready = False
-            else:
-                self.show_missed_label = True
-                self.bobber_animation = False
                 self.fish_is_ready = False
                 self.is_fishing = False
+                self.bobber_animation = False
+                self.main_loop = True
+                self.buttonX, self.buttonY = random.randint(100, 1250), random.randint(50, 700)
+                self.button_message.x, self.button_message.y = self.buttonX, self.buttonY
+                self.button_appear = False
+                self.fish_ticks = 0
+            else:
+                self.show_missed_label = True
+                self.fish_is_ready = False
+                self.is_fishing = False
+                self.bobber_animation = False
+                self.main_loop = True
+                self.buttonX, self.buttonY = random.randint(100, 1250), random.randint(50, 700)
+                self.button_message.x, self.button_message.y = self.buttonX, self.buttonY
+                self.fish_ticks = 0
                 self.button_appear = False
 
     def trigger_mob(self):
