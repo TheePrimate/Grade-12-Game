@@ -44,7 +44,7 @@ class GameView(arcade.View):
         self.mine_texture = arcade.load_texture("assets/naval_mine.png")
         self.mine_sprite = arcade.Sprite(self.mine_texture, center_x=self.mineX, center_y=self.mineY)
         self.mine_list.append(self.mine_sprite)
-        self.sanity_bar_texture = arcade.load_texture("assets/SanityBar.png")
+        self.sanity_bar_texture = arcade.load_texture("assets/sanity_bar.png")
         self.sanity_bar_sprite = arcade.Sprite(self.sanity_bar_texture, center_x=FISHING_MINIGAME_X,
                                                center_y=FISHING_MINIGAME_Y)
         self.mine_list.append(self.sanity_bar_sprite)
