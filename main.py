@@ -2,7 +2,7 @@
 
 # from constants import *
 from library import *
-
+import math
 
 class GameView(arcade.View):
     """
@@ -12,10 +12,10 @@ class GameView(arcade.View):
         # Call the parent class to set up the window
         super().__init__()
         # Loads the texture to become sprites of the bob, and the background
-        self.bob_texture = arcade.load_texture("assets/arbitrary_asset.png")
+        self.bob_texture = arcade.load_texture("assets/bobber.png")
+        self.bob_sprite = arcade.Sprite(self.bob_texture, 0.75)
         self.background_texture = arcade.load_texture("assets/background.png")
-        self.background_sprite = arcade.Sprite(self.background_texture, scale = 1)
-        self.bob_sprite = arcade.Sprite(self.bob_texture, scale = 2)
+        self.background_sprite = arcade.Sprite(self.background_texture)
         # Loop variables
         # The time in a day
         self.timer = 0
@@ -35,13 +35,13 @@ class GameView(arcade.View):
         # This timer is for the bobbing animation to happen
         self.change_ticks = 0
         # This shows how many seconds are needed before a fish pops up
-        self.fish = random.randint(300, 1200)
+        self.fish = random.randint(0, 100)
         # Sets the position of the background image
         self.background_sprite.center_x = WINDOW_WIDTH / 2
         self.background_sprite.center_y = WINDOW_HEIGHT / 2
         # Sets the position of the bobber sprite
-        self.bob_sprite.center_x = 1100
-        self.bob_sprite.center_y = 100
+        self.bob_sprite.center_x = 1350
+        self.bob_sprite.center_y = 0
         # The money quota for the first day
         self.money_quota = 100
         # Lets us know when the bobber sprite should start bobbing
@@ -58,6 +58,11 @@ class GameView(arcade.View):
         self.lose = False
         # Variable that lets us show a missed fish label for a few seconds
         self.show_missed_label = False
+
+        self.button_appear = False
+        self.buttonX = random.randint(100, 1250)
+        self.buttonY = random.randint(50, 700)
+        self.button_message = arcade.Text("Click!", self.buttonX, self.buttonY, anchor_x='center', anchor_y='center')
         # Lets us know when the main loop is going on and not any minigames
         self.main_loop = True
         self.background_color = arcade.csscolor.CORNFLOWER_BLUE
@@ -87,6 +92,10 @@ class GameView(arcade.View):
         if self.is_fishing:
             self.bobber_animation = True
             arcade.draw_sprite(self.bob_sprite)
+        if self.button_appear:
+            arcade.draw_circle_filled(self.buttonX, self.buttonY, radius=50,
+                                      color=(30, 30, 30, 200))
+            self.button_message.draw()
 
     def on_update(self, delta_time):
         # Tick timer, every tick add one there are 60 ticks in a second
@@ -115,22 +124,23 @@ class GameView(arcade.View):
                 self.fish_ticks += 1
                 self.bobber_animation = False
                 self.bobber_ticks = 0
+
         # Once the fish is on the line, start a timer so the bobber can move, after 3 seconds
         if self.fish_is_ready:
-            self.bob_sprite.center_y = 50
-            self.change_ticks += 1
-            if self.change_ticks == 45:
-                self.bob_sprite.center_y = 150
-                if self.change_ticks == 90:
-                    self.bob_sprite.center_y = 100
-                    if self.change_ticks == 180:
-                        self.change_ticks = 0
-                        self.fish_ticks = 0
-                        self.is_fishing = False
-                        self.fish_is_ready = False
+            # Current amplitude (2.5px) and frequency (0.25 Hz)
+            bobbing_offset = math.sin(self.timer * 0.25) * 2.5
+            self.bob_sprite.center_y = 0 + bobbing_offset
+            # Current amplitude (1px) and frequency (0.25 Hz)
+            #self.bob_sprite.angle = math.sin(self.timer*0.1) * 5
+            #self.bob_sprite.center_y = 25
 
-
-
+            self.fish_ticks += 1
+            self.button_appear = True
+            if self.fish_ticks >= 180:
+                self.is_fishing = False
+                self.button_appear = False
+                self.show_missed_label = True
+                self.fish_is_ready = False
 
     def on_key_press(self, key, modifiers):
         """Called whenever a key is pressed."""
@@ -145,20 +155,24 @@ class GameView(arcade.View):
         pass
 
     def on_mouse_press(self, x, y, button, modifiers):
+        dx = x - self.buttonX
+        dy = y - self.buttonY
+        distance_squared = dx**2 + dy**2
         if self.main_loop:
             self.main_loop = False
             self.is_fishing = True
         if self.fish_is_ready:
-            if self.fish_ticks < 180:
+            if self.fish_ticks < 180 and distance_squared <= 50**2:
                 self.fishing_minigame_activate = True
+                print('minigame activated')
                 self.bobber_animation = False
                 self.fish_is_ready = False
             else:
                 self.show_missed_label = True
                 self.bobber_animation = False
                 self.fish_is_ready = False
-
-
+                self.is_fishing = False
+                self.button_appear = False
 
     def trigger_mob(self):
         # Every new day the quota goes up by 10$ and the counter increases while the timer resets
