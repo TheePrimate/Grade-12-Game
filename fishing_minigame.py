@@ -31,7 +31,6 @@ class FishingMiniGame(arcade.Window):
         self.wall_block = arcade.SpriteList()
         self.progress_bar_height = 0
 
-
         self.background_texture = arcade.load_texture('assets/background.png')
         self.background_sprite = arcade.Sprite(self.background_texture)
         self.background_sprite.center_x = WINDOW_WIDTH / 2

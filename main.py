@@ -1,4 +1,5 @@
 # Main game loop goes here
+import arcade
 
 # from constants import *
 from library import *
@@ -16,6 +17,13 @@ class GameView(arcade.View):
         self.bob_sprite = arcade.Sprite(self.bob_texture, 0.75)
         self.background_texture = arcade.load_texture("assets/background.png")
         self.background_sprite = arcade.Sprite(self.background_texture)
+
+        self.player_texture = arcade.load_texture('assets/arbitrary_asset.png')
+        self.player_sprite = arcade.Sprite(self.player_texture)
+        self.player_sprite.position = (200, 200)
+        self.player_list = arcade.SpriteList()
+        self.player_list.append(self.player_sprite)
+
         # Loop variables
         # The time in a day
         self.timer = 0
@@ -67,6 +75,15 @@ class GameView(arcade.View):
         self.main_loop = True
         self.background_color = arcade.csscolor.CORNFLOWER_BLUE
 
+        current_fish = random.choices(FISH_LIST, weights=[0.20, 0.20, 0.15, 0.15, 0.05, 0.05,
+                                                          0.025, 0.025, 0.02, 0.02, 0.11], k=1)[0]
+        self.current_fish = fish_data[current_fish][4]
+        self.current_fish_texture = arcade.load_texture(self.current_fish)
+        self.current_fish_sprite = arcade.Sprite(self.current_fish_texture)
+
+        self.physics_engine = arcade.PhysicsEnginePlatformer(self.current_fish_sprite, None, GRAVITY-1, None,
+                                                             self.player_list)
+
     def setup(self):
         """Set up the game here. Call this function to restart the game."""
         pass
@@ -80,6 +97,9 @@ class GameView(arcade.View):
         self.clear()
         # Draw the background
         arcade.draw_sprite(self.background_sprite)
+
+        arcade.draw_sprite(self.current_fish_sprite)
+        self.player_list.draw()
         # Draws the missed fish text once we miss a fish
         if self.show_missed_label:
             arcade.draw_text(f"You missed the fish", WINDOW_WIDTH/2-90, 350, arcade.color.GOLD)
@@ -98,6 +118,8 @@ class GameView(arcade.View):
             self.button_message.draw()
 
     def on_update(self, delta_time):
+        self.physics_engine.update()
+        self.player_list.update()
         # Tick timer, every tick add one there are 60 ticks in a second
         self.timer += 1
         # Every 5 minutes or 18000 ticks trigger a new day with the trigger mob function
@@ -130,9 +152,8 @@ class GameView(arcade.View):
             # Current amplitude (2.5px) and frequency (0.25 Hz)
             bobbing_offset = math.sin(self.timer * 0.25) * 2.5
             self.bob_sprite.center_y = 0 + bobbing_offset
-            # Current amplitude (1px) and frequency (0.25 Hz)
-            #self.bob_sprite.angle = math.sin(self.timer*0.1) * 5
-            #self.bob_sprite.center_y = 25
+            # Current amplitude (1px) and frequency (0.1 Hz)
+            self.bob_sprite.angle = math.sin(self.timer*0.1) * 1
 
             self.fish_ticks += 1
             self.button_appear = True
@@ -153,6 +174,7 @@ class GameView(arcade.View):
             print(self.is_fishing)
             print(self.bobber_ticks)
 
+
     def on_key_release(self, key, modifiers):
         """Called whenever a key is released."""
         pass
@@ -161,31 +183,33 @@ class GameView(arcade.View):
         dx = x - self.buttonX
         dy = y - self.buttonY
         distance_squared = dx**2 + dy**2
-        if self.main_loop:
-            self.main_loop = False
-            self.is_fishing = True
-        if self.fish_is_ready:
-            if self.fish_ticks < 180 and distance_squared <= 50**2:
-                self.fishing_minigame_activate = True
-                print('minigame activated')
-                self.fish_is_ready = False
-                self.is_fishing = False
-                self.bobber_animation = False
-                self.main_loop = True
-                self.buttonX, self.buttonY = random.randint(100, 1250), random.randint(50, 700)
-                self.button_message.x, self.button_message.y = self.buttonX, self.buttonY
-                self.button_appear = False
-                self.fish_ticks = 0
-            else:
-                self.show_missed_label = True
-                self.fish_is_ready = False
-                self.is_fishing = False
-                self.bobber_animation = False
-                self.main_loop = True
-                self.buttonX, self.buttonY = random.randint(100, 1250), random.randint(50, 700)
-                self.button_message.x, self.button_message.y = self.buttonX, self.buttonY
-                self.fish_ticks = 0
-                self.button_appear = False
+        if button == arcade.key.LEFT:
+            if self.main_loop:
+                self.main_loop = False
+                self.is_fishing = True
+            if self.fish_is_ready:
+                if self.fish_ticks < 180 and distance_squared <= 50**2:
+                    self.fishing_minigame_activate = True
+                    print('minigame activated')
+                    self.fish_is_ready = False
+                    self.is_fishing = False
+                    self.bobber_animation = False
+                    self.main_loop = True
+                    self.buttonX, self.buttonY = random.randint(100, 1250), random.randint(50, 700)
+                    self.button_message.x, self.button_message.y = self.buttonX, self.buttonY
+                    self.button_appear = False
+                    self.fish_ticks = 0
+                else:
+                    self.show_missed_label = True
+                    self.fish_is_ready = False
+                    self.is_fishing = False
+                    self.bobber_animation = False
+                    self.main_loop = True
+                    self.buttonX, self.buttonY = random.randint(100, 1250), random.randint(50, 700)
+                    self.button_message.x, self.button_message.y = self.buttonX, self.buttonY
+                    self.fish_ticks = 0
+                    self.button_appear = False
+
 
     def trigger_mob(self):
         # Every new day the quota goes up by 10$ and the counter increases while the timer resets
