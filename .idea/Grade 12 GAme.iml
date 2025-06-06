@@ -7,6 +7,7 @@
     </content>
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
     <orderEntry type="inheritedJdk" />
 =======
     <orderEntry type="jdk" jdkName="Python 3.12" jdkType="Python SDK" />
@@ -14,6 +15,9 @@
 =======
     <orderEntry type="jdk" jdkName="Python 3.11" jdkType="Python SDK" />
 >>>>>>> parent of 402ea94 (V.10.0)
+=======
+    <orderEntry type="jdk" jdkName="Python 3.11" jdkType="Python SDK" />
+>>>>>>> parent of 05b4c1e (V.0.8.5)
     <orderEntry type="sourceFolder" forTests="false" />
   </component>
 </module>
