@@ -7,10 +7,14 @@
     </content>
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
     <orderEntry type="inheritedJdk" />
 =======
     <orderEntry type="jdk" jdkName="Python 3.12" jdkType="Python SDK" />
 >>>>>>> 05b4c1e92ed0e98936b2d5d9d4d827b448b34048
+=======
+    <orderEntry type="jdk" jdkName="Python 3.11" jdkType="Python SDK" />
+>>>>>>> parent of 402ea94 (V.10.0)
 =======
     <orderEntry type="jdk" jdkName="Python 3.11" jdkType="Python SDK" />
 >>>>>>> parent of 402ea94 (V.10.0)
