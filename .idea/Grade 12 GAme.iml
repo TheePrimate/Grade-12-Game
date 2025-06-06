@@ -5,7 +5,11 @@
       <excludeFolder url="file://$MODULE_DIR$/.venv" />
       <excludeFolder url="file://$MODULE_DIR$/venv" />
     </content>
+<<<<<<< HEAD
+    <orderEntry type="inheritedJdk" />
+=======
     <orderEntry type="jdk" jdkName="Python 3.12" jdkType="Python SDK" />
+>>>>>>> 05b4c1e92ed0e98936b2d5d9d4d827b448b34048
     <orderEntry type="sourceFolder" forTests="false" />
   </component>
 </module>

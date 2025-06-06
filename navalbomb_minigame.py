@@ -37,6 +37,8 @@ class GameView(arcade.View):
         self.san_der = 0
         self.sanity = 459
         self.death = False
+        self.san_accel = 0
+        self.blackout = 0
 
         # Setup mine sprites
         self.mine_list = arcade.SpriteList()
@@ -44,7 +46,7 @@ class GameView(arcade.View):
         self.mine_texture = arcade.load_texture("assets/naval_mine.png")
         self.mine_sprite = arcade.Sprite(self.mine_texture, center_x=self.mineX, center_y=self.mineY)
         self.mine_list.append(self.mine_sprite)
-        self.sanity_bar_texture = arcade.load_texture("assets/SanityBar.png")
+        self.sanity_bar_texture = arcade.load_texture("assets/sanity_bar.png")
         self.sanity_bar_sprite = arcade.Sprite(self.sanity_bar_texture, center_x=FISHING_MINIGAME_X,
                                                center_y=FISHING_MINIGAME_Y)
         self.mine_list.append(self.sanity_bar_sprite)
@@ -77,24 +79,31 @@ class GameView(arcade.View):
                                               arcade.color.AIR_SUPERIORITY_BLUE)
 
             # Draw insanity blackout
-
+            arcade.draw_lrbt_rectangle_filled(0, WINDOW_WIDTH, 0, WINDOW_HEIGHT, color=(0, 0, 0, self.blackout))
 
     def on_update(self, delta_time):
         # If the naval mine mini-game is engaged execute the following
         if self.fish == "mine":
             # Oscillate hand
             if self.hand_sprite.center_x <= 300:
-                self.hand_vel = 3
-                self.san_der += 2*self.san_der
+                self.san_der = True
+                self.hand_vel = 0
             elif self.hand_sprite.center_x >= 700:
-                self.hand_vel = -3
-                self.san_der -= 2*self.san_der
-            self.hand_sprite.center_x += self.hand_vel + self.san_der
+                self.san_der = False
+                self.hand_vel = 0
+            if self.san_der:
+                self.hand_vel += 1 + self.san_accel
+            if not self.san_der:
+                self.hand_vel -= 1 + self.san_accel
+
+            self.hand_sprite.center_x += self.hand_vel
 
             # Sanity
             self.sanity -= 0.5
-            self.san_der += 0.1
-            self.insanity_sprite.alpha = self.sanity/4.59
+            self.san_accel += 0.005
+            if self.blackout < 254:
+                self.blackout += 0.3
+            self.insanity_sprite.alpha = self.sanity / 4.59
 
     def on_key_press(self, key, key_modifiers):
         """

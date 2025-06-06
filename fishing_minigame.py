@@ -1,5 +1,3 @@
-import arcade
-
 from library import *
 
 
@@ -30,7 +28,6 @@ class FishingMiniGame(arcade.Window):
         self.current_fish_list = arcade.SpriteList()
         self.wall_block = arcade.SpriteList()
         self.progress_bar_height = 0
-
 
         self.background_texture = arcade.load_texture('assets/background.png')
         self.background_sprite = arcade.Sprite(self.background_texture)
@@ -94,17 +91,6 @@ class FishingMiniGame(arcade.Window):
         self.progress_bar_bar_sprite.center_y = FISHING_MINIGAME_Y
         self.fishing_sprite_list.append(self.progress_bar_bar_sprite)
 
-        # Basic Animation... Follow these steps
-        jellyfish_sheet = arcade.load_spritesheet("assets/immortal_jellyfish.png")
-        texture_list = jellyfish_sheet.get_texture_grid(size=(1350, 756), columns=8, count=8)
-        frames = []
-        for tex in texture_list:
-            frames.append(arcade.TextureKeyframe(tex))
-        anim = arcade.TextureAnimation(frames)
-        self.immortal_jellyfish = arcade.TextureAnimationSprite(animation=anim)
-        self.immortal_jellyfish.position = WINDOW_WIDTH/2, WINDOW_HEIGHT/2
-        self.fishing_sprite_list.append(self.immortal_jellyfish)
-
         self.physics_engine1 = arcade.PhysicsEnginePlatformer(self.hook_sprite, None,
                                                               GRAVITY, None, self.wall_block)
         self.physics_engine2 = arcade.PhysicsEnginePlatformer(self.indicator_sprite, None,
@@ -119,6 +105,8 @@ class FishingMiniGame(arcade.Window):
         self.current_fish_sprite = None
         self.current_difficulty_low = None
         self.current_difficulty_high = None
+        self.init_animate = True
+        self.animate_fish = None
 
     def setup(self):
         """Set up the game here. Call this function to restart the game."""
@@ -140,7 +128,7 @@ class FishingMiniGame(arcade.Window):
             self.current_fish_list.draw(pixelated=True)
 
     def on_update(self, delta_time):
-        self.fishing_sprite_list.update_animation()
+
         if self.fishing_minigame_activate is True:
             if self.choose_fish is True:
                 current_fish = random.choices(FISH_LIST, weights=[0.20, 0.20, 0.15, 0.15, 0.05, 0.05,
@@ -156,26 +144,34 @@ class FishingMiniGame(arcade.Window):
                 self.current_difficulty_high = fish_data[current_fish][2]
                 self.current_time_limit = fish_data[current_fish][3]
                 self.current_sprite = fish_data[current_fish][4]
-
-                self.current_fish_texture = arcade.load_texture(self.current_sprite)
-                self.current_fish_sprite = arcade.Sprite(self.current_fish_texture)
-                self.current_fish_sprite.center_x = WINDOW_WIDTH/2
-                self.current_fish_sprite.center_y = WINDOW_HEIGHT/2
-                self.current_fish_list.append(self.current_fish_sprite)
-
                 self.choose_fish = False
+
+                if self.init_animate is True:
+                    self.current_fish_texture = arcade.load_spritesheet(self.current_sprite)
+                    texture_list = self.current_fish_texture.get_texture_grid(size=(1350, 756),
+                                                                              columns=fish_data[current_fish][5],
+                                                                              count=fish_data[current_fish][6])
+                    frames = []
+                    for tex in texture_list:
+                        frames.append(arcade.TextureKeyframe(tex))
+                    anim = arcade.TextureAnimation(frames)
+                    self.animate_fish = arcade.TextureAnimationSprite(animation=anim)
+                    self.animate_fish.position = WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2
+                    self.fishing_sprite_list.append(self.animate_fish)
+                    self.init_animate = False
                 
             self.indicator_ticks += 1
             self.fishing_sprite_list.update()
             self.physics_engine1.update()
             self.physics_engine2.update()
+            self.fishing_sprite_list.update_animation()
 
             self.collision = arcade.check_for_collision(self.hook_sprite, self.indicator_sprite)
 
             if self.collision is True:
                 self.fishing_ticks += 1
                 if self.progress_bar_bar_sprite.height < 1700:
-                    self.progress_bar_bar_sprite.bottom = 224
+                    self.progress_bar_bar_sprite.bottom = 235
                     self.progress_bar_bar_sprite.height += 3
                 if self.progress_bar_bar_sprite.height >= 1700:
                     self.fishing_minigame_activate = False
@@ -185,7 +181,7 @@ class FishingMiniGame(arcade.Window):
                     print("Progress:", self.fishing_seconds)
             else:
                 if self.progress_bar_bar_sprite.height > 0:
-                    self.progress_bar_bar_sprite.bottom = 224
+                    self.progress_bar_bar_sprite.bottom = 235
                     self.progress_bar_bar_sprite.height -= 3
                     if self.indicator_ticks % TICK_RATE == 0:
                         self.indicator_seconds += 1
