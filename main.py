@@ -23,7 +23,6 @@ class GameView(arcade.View):
         self.player_sprite.position = (200, 200)
         self.player_list = arcade.SpriteList()
         self.player_list.append(self.player_sprite)
-        self.fish_list = arcade.SpriteList()
 
         # Loop variables
         # The time in a day
@@ -78,12 +77,12 @@ class GameView(arcade.View):
 
         current_fish = random.choices(FISH_LIST, weights=[0.20, 0.20, 0.15, 0.15, 0.05, 0.05,
                                                           0.025, 0.025, 0.02, 0.02, 0.11], k=1)[0]
-        self.current_fish_texture = arcade.load_texture(fish_data[current_fish][4])
+        self.current_fish = fish_data[current_fish][4]
+        self.current_fish_texture = arcade.load_texture(self.current_fish)
         self.current_fish_sprite = arcade.Sprite(self.current_fish_texture)
-        self.fish_list.append(self.current_fish_sprite)
-        self.physics_engine = arcade.PhysicsEnginePlatformer(self.player_sprite, None, GRAVITY-1, None,
-                                                             self.fish_list)
 
+        self.physics_engine = arcade.PhysicsEnginePlatformer(self.current_fish_sprite, None, GRAVITY-1, None,
+                                                             self.player_list)
 
     def setup(self):
         """Set up the game here. Call this function to restart the game."""
@@ -98,7 +97,8 @@ class GameView(arcade.View):
         self.clear()
         # Draw the background
         arcade.draw_sprite(self.background_sprite)
-        self.fish_list.draw()
+
+        arcade.draw_sprite(self.current_fish_sprite)
         self.player_list.draw()
         # Draws the missed fish text once we miss a fish
         if self.show_missed_label:
@@ -173,7 +173,7 @@ class GameView(arcade.View):
             print(self.fish)
             print(self.is_fishing)
             print(self.bobber_ticks)
-            self.current_fish_sprite.center_y += 100
+
 
     def on_key_release(self, key, modifiers):
         """Called whenever a key is released."""
@@ -183,7 +183,7 @@ class GameView(arcade.View):
         dx = x - self.buttonX
         dy = y - self.buttonY
         distance_squared = dx**2 + dy**2
-        if button == arcade.MOUSE_BUTTON_LEFT:
+        if button == arcade.key.LEFT:
             if self.main_loop:
                 self.main_loop = False
                 self.is_fishing = True
